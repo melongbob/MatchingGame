@@ -26,12 +26,12 @@ import java.util.Set;
 
 import com.squareup.picasso.Picasso;
 
-public class Game5x4Activity extends AppCompatActivity implements TaskCompleted {
+public class Game6x5Activity extends AppCompatActivity implements TaskCompleted {
 
     //Variables
     String URL_STRING = "https://shopicruit.myshopify.com/admin/products.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6";
     ArrayList<String> img_urls;
-    final int NUM_IMGS = 10;
+    final int NUM_IMGS = 15;
 
     AlertDialog.Builder builder;
     ArrayList<ImageButton> buttons;
@@ -51,7 +51,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_5x4);
+        setContentView(R.layout.activity_6x5);
 
         builder = new AlertDialog.Builder(this);
 
@@ -63,7 +63,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
 
         img_urls = new ArrayList<>();
 
-        new AsyncComplex(Game5x4Activity.this).execute(URL_STRING);
+        new AsyncComplex(Game6x5Activity.this).execute(URL_STRING);
     }
 
     //upon retrieving JSON object, extracts images from it
@@ -90,6 +90,13 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
 
                 img_urls.add(image_url);
             }
+
+            //bandaid solution for same imgs from different urls
+            JSONObject p = products.getJSONObject(NUM_IMGS);
+            JSONObject image = p.getJSONObject("image");
+            String img_url = image.getString("src");
+
+            img_urls.set(11, img_url);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -121,6 +128,16 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
         buttons.add((ImageButton)findViewById(R.id.imageButton18));
         buttons.add((ImageButton)findViewById(R.id.imageButton19));
         buttons.add((ImageButton)findViewById(R.id.imageButton20));
+        buttons.add((ImageButton)findViewById(R.id.imageButton21));
+        buttons.add((ImageButton)findViewById(R.id.imageButton22));
+        buttons.add((ImageButton)findViewById(R.id.imageButton23));
+        buttons.add((ImageButton)findViewById(R.id.imageButton24));
+        buttons.add((ImageButton)findViewById(R.id.imageButton25));
+        buttons.add((ImageButton)findViewById(R.id.imageButton26));
+        buttons.add((ImageButton)findViewById(R.id.imageButton27));
+        buttons.add((ImageButton)findViewById(R.id.imageButton28));
+        buttons.add((ImageButton)findViewById(R.id.imageButton29));
+        buttons.add((ImageButton)findViewById(R.id.imageButton30));
 
         Collections.shuffle(buttons, new Random());
 
@@ -176,7 +193,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
                     card2.setEnabled(false);
                     matches.setText("Matches: " + matchedCards.size()/2);
                     firstCard = null;
-                    if(matchedCards.size() == 2*NUM_IMGS){
+                    if(matchedCards.size() == 2*10){
                         builder.setMessage("Do you want to play again?")
                                 .setCancelable(false)
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {

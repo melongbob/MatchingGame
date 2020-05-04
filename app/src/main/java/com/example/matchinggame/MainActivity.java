@@ -9,22 +9,39 @@ import android.view.View;
 import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity {
-    Button button;
+
+    Button button5x4;
+    Button button6x5;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+
+        button5x4 = (Button) findViewById(R.id.button1);
+        button5x4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v){
-                openNewActivity();
+                openGame5x4Activity();
+            }
+        });
+
+        button6x5 = (Button) findViewById(R.id.button2);
+        button6x5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v){
+                openGame6x5Activity();
             }
         });
     }
 
-    public void openNewActivity(){
-        Intent intent = new Intent(this, Game5x4Activity.class);
-        startActivity(intent);
+    public void openGame5x4Activity(){
+        Intent intent5x4 = new Intent(this, Game5x4Activity.class);
+        startActivity(intent5x4);
+    }
+
+    public void openGame6x5Activity(){
+        Intent intent6x5 = new Intent(this, Game6x5Activity.class);
+        startActivity(intent6x5);
     }
 }
