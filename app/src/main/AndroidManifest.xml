@@ -12,8 +12,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Game6x5Activity"></activity>
         <activity android:name=".Game5x4Activity"></activity>
+        <activity android:name=".Game6x5Activity"></activity>
+        <activity android:name=".GameMatch3Activity"></activity>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

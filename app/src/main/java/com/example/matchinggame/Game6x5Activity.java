@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -46,6 +47,7 @@ public class Game6x5Activity extends AppCompatActivity implements TaskCompleted 
     TextView matches;
     int flip_count = 0;
     int match_count = 0;
+    Button shuffle;
 
     //initializes data structures and makes API call
     @Override
@@ -63,6 +65,8 @@ public class Game6x5Activity extends AppCompatActivity implements TaskCompleted 
 
         img_urls = new ArrayList<>();
 
+        shuffle = (Button) findViewById(R.id.button_shuffle);
+
         new AsyncComplex(Game6x5Activity.this).execute(URL_STRING);
     }
 
@@ -75,6 +79,22 @@ public class Game6x5Activity extends AppCompatActivity implements TaskCompleted 
         //display image on each button
         buttons = new ArrayList<>();
         initializeBoard(buttons);
+
+        //shuffle cards when shuffle button is clicked
+        shuffle.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                for(ImageButton b : buttons){
+                    Random random = new Random();
+                    int idx = random.nextInt(buttons.size());
+                    if(!matchedCards.contains(b) && !matchedCards.contains(buttons.get(idx))){
+                        Card temp = hm.get(b);
+                        hm.put(b, hm.get(buttons.get(idx)));
+                        hm.put(buttons.get(idx), temp);
+                    }
+                }
+            }
+        });
     }
 
     //input: JSON String
@@ -168,13 +188,13 @@ public class Game6x5Activity extends AppCompatActivity implements TaskCompleted 
                     //if current card is first of the two, keep record and flip it
                     if(firstCard == null){
                         firstCard = card;
-                        Picasso.get().load(img_urls.get(img_id)).into(firstCard);
+                        Picasso.get().load(img_urls.get(hm.get(firstCard).img_id)).into(firstCard);
                         return;
                     }
 
                     //if current card is second of the two, check if it's a match
                     if(hm.get(firstCard).img_id == hm.get(card).img_id){
-                        Picasso.get().load(img_urls.get(img_id)).into(card);
+                        Picasso.get().load(img_urls.get(hm.get(card).img_id)).into(card);
                         processCardMatch(firstCard, card);
                     }
                     else{
@@ -220,7 +240,7 @@ public class Game6x5Activity extends AppCompatActivity implements TaskCompleted 
                     isBoardLocked = true;
                     firstCard = card1;
                     secondCard = card2;
-                    Picasso.get().load(img_urls.get(img_id)).into(secondCard);
+                    Picasso.get().load(img_urls.get(hm.get(secondCard).img_id)).into(secondCard);
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable (){
                         @Override

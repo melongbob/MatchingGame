@@ -5,7 +5,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -28,7 +27,7 @@ import java.util.Set;
 
 import com.squareup.picasso.Picasso;
 
-public class Game5x4Activity extends AppCompatActivity implements TaskCompleted {
+public class GameMatch3Activity extends AppCompatActivity implements TaskCompleted {
 
     //Variables
     String URL_STRING = "https://shopicruit.myshopify.com/admin/products.json?page=1&access_token=c32313df0d0ef512ca64d5b336a0d7c6";
@@ -43,6 +42,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
     boolean isBoardLocked;
     ImageButton firstCard;
     ImageButton secondCard;
+    ImageButton thirdCard;
 
     TextView flips;
     TextView matches;
@@ -54,7 +54,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_5x4);
+        setContentView(R.layout.activity_match3);
 
         builder = new AlertDialog.Builder(this);
 
@@ -68,7 +68,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
 
         shuffle = (Button) findViewById(R.id.button_shuffle);
 
-        new AsyncComplex(Game5x4Activity.this).execute(URL_STRING);
+        new AsyncComplex(GameMatch3Activity.this).execute(URL_STRING);
     }
 
     //upon retrieving JSON object, extracts images from it
@@ -111,7 +111,6 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
 
                 img_urls.add(image_url);
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -142,6 +141,16 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
         buttons.add((ImageButton)findViewById(R.id.imageButton18));
         buttons.add((ImageButton)findViewById(R.id.imageButton19));
         buttons.add((ImageButton)findViewById(R.id.imageButton20));
+        buttons.add((ImageButton)findViewById(R.id.imageButton21));
+        buttons.add((ImageButton)findViewById(R.id.imageButton22));
+        buttons.add((ImageButton)findViewById(R.id.imageButton23));
+        buttons.add((ImageButton)findViewById(R.id.imageButton24));
+        buttons.add((ImageButton)findViewById(R.id.imageButton25));
+        buttons.add((ImageButton)findViewById(R.id.imageButton26));
+        buttons.add((ImageButton)findViewById(R.id.imageButton27));
+        buttons.add((ImageButton)findViewById(R.id.imageButton28));
+        buttons.add((ImageButton)findViewById(R.id.imageButton29));
+        buttons.add((ImageButton)findViewById(R.id.imageButton30));
 
         Collections.shuffle(buttons, new Random());
 
@@ -151,7 +160,7 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
         isBoardLocked = false;
         firstCard = null;
 
-        //assign each img_id to two of the buttons
+        //assign each img_id to three of the buttons
         //onClickListener: for every two cards flipped, check if they are a match
         for(int i = 0; i < buttons.size(); i++) {
 
@@ -176,28 +185,38 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
                         return;
                     }
 
-                    //if current card is second of the two, check if it's a match
-                    if(hm.get(firstCard).img_id == hm.get(card).img_id){
+                    if(secondCard == null){
+                        secondCard = card;
+                        Picasso.get().load(img_urls.get(hm.get(secondCard).img_id)).into(secondCard);
+                        return;
+                    }
+
+                    //if current card is third of the three, check if it's a match
+                    if(hm.get(firstCard).img_id == hm.get(secondCard).img_id
+                            && hm.get(secondCard).img_id == hm.get(card).img_id){
                         Picasso.get().load(img_urls.get(hm.get(card).img_id)).into(card);
-                        processCardMatch(firstCard, card);
+                        processCardMatch(firstCard, secondCard, card);
                     }
                     else{
-                        processCardNoMatch(firstCard, card);
+                        processCardNoMatch(firstCard, secondCard, card);
                     }
                 }
 
                 private boolean canFlipCard(ImageButton card){
-                    return !isBoardLocked && (card != firstCard) && !matchedCards.contains(card);
+                    return !isBoardLocked && (card != firstCard) && (card != secondCard)&& !matchedCards.contains(card);
                 }
 
-                private void processCardMatch(ImageButton card1, ImageButton card2){
+                private void processCardMatch(ImageButton card1, ImageButton card2, ImageButton card3){
                     matchedCards.add(card1);
                     matchedCards.add(card2);
+                    matchedCards.add(card3);
                     card1.setEnabled(false);
                     card2.setEnabled(false);
-                    matches.setText("Matches: " + matchedCards.size()/2);
+                    card3.setEnabled(false);
+                    matches.setText("Matches: " + matchedCards.size()/3);
                     firstCard = null;
-                    if(matchedCards.size() == 2*NUM_IMGS){
+                    secondCard = null;
+                    if(matchedCards.size() == 3*NUM_IMGS){
                         builder.setMessage("Do you want to play again?")
                                 .setCancelable(false)
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -220,19 +239,22 @@ public class Game5x4Activity extends AppCompatActivity implements TaskCompleted 
                     }
                 }
 
-                private void processCardNoMatch(ImageButton card1, ImageButton card2){
+                private void processCardNoMatch(ImageButton card1, ImageButton card2, ImageButton card3){
                     isBoardLocked = true;
                     firstCard = card1;
                     secondCard = card2;
-                    Picasso.get().load(img_urls.get(hm.get(secondCard).img_id)).into(secondCard);
+                    thirdCard = card3;
+                    Picasso.get().load(img_urls.get(hm.get(thirdCard).img_id)).into(thirdCard);
                     final Handler handler = new Handler();
                     handler.postDelayed(new Runnable (){
                         @Override
                         public void run(){
                             firstCard.setImageResource(0);
                             secondCard.setImageResource(0);
+                            thirdCard.setImageResource(0);
                             firstCard = null;
                             secondCard = null;
+                            thirdCard = null;
                             isBoardLocked = false;
                         }
                     }, 1000);

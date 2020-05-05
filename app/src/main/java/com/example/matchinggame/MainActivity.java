@@ -12,6 +12,7 @@ public class MainActivity extends AppCompatActivity {
 
     Button button5x4;
     Button button6x5;
+    Button buttonMatch3;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,14 @@ public class MainActivity extends AppCompatActivity {
                 openGame6x5Activity();
             }
         });
+
+        buttonMatch3 = (Button) findViewById(R.id.button3);
+        buttonMatch3.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                openGameMatch3Activity();
+            }
+        });
     }
 
     public void openGame5x4Activity(){
@@ -43,5 +52,10 @@ public class MainActivity extends AppCompatActivity {
     public void openGame6x5Activity(){
         Intent intent6x5 = new Intent(this, Game6x5Activity.class);
         startActivity(intent6x5);
+    }
+
+    public void openGameMatch3Activity(){
+        Intent intentMatch3 = new Intent(this, GameMatch3Activity.class);
+        startActivity(intentMatch3);
     }
 }
