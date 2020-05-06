@@ -213,7 +213,7 @@ public class Game6x5Activity extends AppCompatActivity implements TaskCompleted 
                     card2.setEnabled(false);
                     matches.setText("Matches: " + matchedCards.size()/2);
                     firstCard = null;
-                    if(matchedCards.size() == 2*10){
+                    if(matchedCards.size() == 2*NUM_IMGS){
                         builder.setMessage("Do you want to play again?")
                                 .setCancelable(false)
                                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
