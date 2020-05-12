@@ -36,7 +36,7 @@ On the top, "Flips" counts the number of cards uers flipped.
   
 The green rectangles represent cards users can flip.  
 Users can click on the rectangle they want to flip to find matches.  
-When users have some matches, the game board will look like this:
+When users have some matches, the game board will look like this:  
 ![alt text](https://github.com/melongbob/MatchingGame/blob/master/matching_game_imgs/5x4_somematch.PNG?raw=true)
 
 Once all matches are found, a dialog will be prompted:  
@@ -52,3 +52,19 @@ or choos "No" to admire all the matches that were found!
 
 6x5 grid - match 10 sets of 3 images  
 ![alt text](https://github.com/melongbob/MatchingGame/blob/master/matching_game_imgs/6x5-3_somematch.PNG?raw=true)
+
+## About the Implementation
+
+The application consists of four activities; one main activity, and three game activities.  
+There are also two classes (AsyncComplex, Card) and one interface (TaskCompleted) that assist the application to function properly.  
+
+__main activity__: contains three buttons that starts different versions of memory games respectively.  
+
+__game activities__: retrieves image urls from the shopify API provided. The number of images to be retrieved is specified by NUM_IMGS variable. Each button in the layout is associated with a Card object. Flipped cards are temporarily stored in a variable, so they can be checked when all cards are flipped.  
+When a match is found, the matched cards are stored in a set data structure. The matched cards in the set cannot be flipped again, and when the size of the set reaches the number of available cards, the game finishes.  
+
+__Card class__: a class created to represent the card objects. In the future versions, if the game becomes more complex, the Card objects can be designed to hold more information.  
+
+__AsyncComplex class__: the class is used for retrieving JSON object from the shopify API call.  
+
+__TaskCompleted interface__: the interface was implemented so the game board can be initialized after necessary images are retrieved from the async API call.  
